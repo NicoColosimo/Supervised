@@ -1,0 +1,100 @@
+# Predicting Mouse Radiation Dose from Spaceflight Exposure Features
+
+This project uses **ridge regression** to predict radiation dose absorbed by mice in spaceflight experiments, based on dosimetry and exposure-related features.
+
+## Target Variables
+
+- `cns_dose_mGy`: Central Nervous System dose (mGy)  
+- `skin_dose_mGy`: Skin dose (mGy)  
+- `bfo_dose_mGy`: Blood-Forming Organ dose (mGy)  
+
+---
+
+## Files
+
+### `rodent_model.py`
+This script:
+- Loads experimental data from `Mouse_with_interaction_final.xlsx`
+- Compares model performance using:
+  - **Base features** (standard exposure/dosimetry)
+  - **Extended features** (includes interaction terms)
+- Applies **multi-output Ridge Regression** with standardized inputs
+- Evaluates model using:
+  - Test set **MSE** and **R²** per target
+  - **5-fold cross-validation**
+  - **Hyperparameter tuning** for Ridge `alpha`
+- Produces visualizations:
+  - **Predicted vs. True** plots
+  - **Residual** plots
+
+---
+
+## Features
+
+### Base Features (8)
+- `log_exposure_duration`  
+- `ADR GCR (mGy/d)`  
+- `ADR SAA (mGy/d)`  
+- `ADR Total (mGy/d)`  
+- `TAD GCR (mGy)`  
+- `TAD SAA (mGy)`  
+- `TAD Total (mGy)`  
+- `avg_daily_total_dose`  
+
+### Additional Interaction Terms (6)
+- `log_exposure_duration_x_TAD_Total`  
+- `ADR_Total_x_TAD_GCR`  
+- `TAD_GCR_x_TAD_SAA`  
+- `log_exposure_duration_x_TAD_SAA`  
+- `TAD_GCR_x_TAD_Total`  
+- `TAD_Total_x_avg_daily_total_dose`  
+
+---
+
+## Usage
+
+1. **Prepare the data**  
+   Place `Mouse_with_interaction_final.xlsx` in the same directory as the script.
+
+2. **Run the model script**
+   ```bash
+   python rodent_model.py
+   ```
+
+---
+
+## Dependencies
+
+Install required packages with:
+```bash
+pip install pandas numpy matplotlib scikit-learn
+```
+
+---
+
+## Output
+
+- **Evaluation Metrics**
+  - MSE and R² scores for each target using both base and extended features
+  - Cross-validation results
+  - Alpha tuning performance across Ridge regression settings
+
+- **Visualizations**
+  - Predicted vs. True plots
+  - Residual plots to assess bias and variance
+
+---
+
+## Notes
+
+- The model uses **MultiOutputRegressor** with **Ridge** regression to predict three target variables simultaneously.
+- **StandardScaler** is used to normalize input features before training.
+- Interaction terms boost model performance by capturing nonlinear relationships.
+- This pipeline aids in understanding the biological impact of spaceflight radiation across multiple organ systems.
+
+---
+
+## Presentation
+
+For a detailed walkthrough of the methodology, results, and insights, check out the presentation here:  
+[View Presentation](https://1drv.ms/p/c/abf32209399c763f/EQnH5PIBoz9MsuilUbpFg18Bs_kCTB2ec5EkgQdz1whRaw?e=hMRLvH)
