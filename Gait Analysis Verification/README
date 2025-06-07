@@ -1,0 +1,98 @@
+# Gait Analysis and Verification Pipeline
+
+This project contains a set of Python scripts for gait analysis, feature extraction, synthetic data generation, and gait verification using a K-Nearest Neighbors (KNN) model.
+
+---
+
+## Script Overview and Workflow
+
+### 1. `extract_smooth_gait_keypoints_dualview_1.py`
+
+- **Purpose:**  
+  Extracts smoothed 2D pose keypoints from dual-view video recordings using MediaPipe Pose.  
+- **Input:**  
+  - Video file (`media.mp4`) containing gait sequences.  
+- **Output:**  
+  - CSV files containing keypoints data for each camera view, ready for further processing.  
+- **Details:**  
+  This script processes videos frame-by-frame to extract pose landmarks, smoothing the keypoints over time. It produces cleaned gait keypoint data for each person.
+
+---
+
+### 2. `segment_gait_feature_extractor_2.py`
+
+- **Purpose:**  
+  Extracts meaningful gait features from raw pose keypoints data by segmenting time windows and computing spatial and temporal metrics.  
+- **Input:**  
+  - CSV file with raw keypoints data (`synthetic_gait_dataset.csv`).  
+- **Output:**  
+  - CSV file with aggregated features and person IDs for each segmented gait window (`synthetic_gait_dataset_withID.csv`).  
+- **Details:**  
+  The script divides each person's gait frames into overlapping windows, calculates distances (hip width), joint angles (knee angle), velocities, and arm swing asymmetry, then summarizes these features per segment.
+
+---
+
+### 3. `gait_synthetic_generator_3.py`
+
+- **Purpose:**  
+  Generates synthetic gait feature datasets by augmenting existing samples to increase data size and variability.  
+- **Input:**  
+  - Feature dataset CSV (from the feature extractor output).  
+- **Output:**  
+  - Expanded synthetic gait feature dataset CSV.  
+- **Details:**  
+  This script uses noise and transformations to create additional samples for each person, which helps improve model robustness during training.
+
+---
+
+### 4. `gait_with_knn_model_4.py`
+
+- **Purpose:**  
+  Implements a gait verification system using a K-Nearest Neighbors (KNN) approach with a distance threshold.  
+- **Input:**  
+  - Synthetic gait feature dataset (from the synthetic data generator).  
+- **Output:**  
+  - Verification results printed as classification reports and logs of accepted/rejected claims.  
+- **Details:**  
+  The script splits data into train/test sets stratified by person, calculates a distance threshold from intra-person distances in training data, and verifies test samples against claimed identities by comparing average distances to the threshold. It outputs accuracy metrics and detailed logs of verification decisions.
+
+---
+## How to Use
+
+1. **Extract raw keypoints** from gait videos:  
+   python extract_smooth_gait_keypoints_dualview_1.py
+
+2. **Extract gait features** from keypoints data:  
+   python segment_gait_feature_extractor_2.py
+
+3. **Generate synthetic gait samples** to augment dataset:  
+   python gait_synthetic_generator_3.py
+
+4. **Run gait verification model** using KNN:  
+   python gait_with_knn_model_4.py
+
+--
+## Requirements
+
+- Python 3.x  
+- Packages: numpy, pandas, scikit-learn, opencv-python, mediapipe (for script 1)
+
+Install dependencies via:  pip install numpy pandas scikit-learn opencv-python mediapipe
+
+
+---
+## Notes
+
+- Data files and video inputs should be placed or generated according to each script's configuration variables.
+- The synthetic data generator and KNN model expect properly formatted CSV feature datasets.
+- Modify parameters such as window size, step size, or distance threshold as needed for your data.
+
+--
+## Presentation
+For a detailed walkthrough of the methodology, results, and insights, check out the presentation here:  
+[View Presentation](https://1drv.ms/p/c/abf32209399c763f/Ef7E7CSgs01PowUdSPT1e-IBgRj5IN9kBGbfgHk40vsSCg?e=TJDnSO)
+
+
+
+
+
