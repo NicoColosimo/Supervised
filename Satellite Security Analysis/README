@@ -1,0 +1,74 @@
+# Synthetic Satellite Telemetry Classification
+
+This project generates synthetic multivariate time-series satellite telemetry data and trains a classification model to detect satellite states:
+
+- **0:** Normal behavior  
+- **1:** System issue  
+- **2:** Compromised system (mixture of normal and anomaly patterns)
+
+---
+
+## Files
+
+### `generate_satellite_data.py`
+- Generates synthetic time-series data for satellite telemetry sensors.  
+- Simulates three classes with different noise, drift, and spike patterns.  
+- Outputs a CSV file: `synthetic_satellite_data.csv`.
+
+### `train_satellite_model.py`
+- Loads and processes the synthetic data.  
+- Extracts time-series features by pivoting time steps for each series.  
+- Scales features and visualizes with PCA.  
+- Trains a CatBoost multiclass classifier.  
+- Evaluates with accuracy, classification report, confusion matrix, and cross-validation.  
+- Provides threshold adjustment for the "compromised" class.  
+- Identifies uncertain predictions via entropy and highlights top feature deviations.
+
+---
+
+## Usage
+
+Generate synthetic data:
+
+```bash
+python generate_satellite_data.py
+```
+
+Train and evaluate the model:
+
+```bash
+python train_satellite_model.py
+```
+
+---
+
+## Dependencies
+
+- numpy  
+- pandas  
+- matplotlib  
+- scikit-learn  
+- scipy  
+- catboost  
+
+Install dependencies via pip:
+
+```bash
+pip install numpy pandas matplotlib scikit-learn scipy catboost
+```
+
+---
+
+## Notes
+
+- The synthetic data contains 140 time-series samples (80 normal, 30 system issues, 30 compromised), each with 7 features over 100 time steps.  
+- The classification model uses time-series data flattened per satellite and leverages CatBoost for multi-class classification.  
+- Uncertainty in predictions is estimated using entropy over predicted probabilities.  
+- Results and plots help interpret model performance and identify uncertain cases.
+
+---
+
+## Presentation
+
+For a detailed walkthrough of the methodology, results, and insights, check out the presentation here:  
+[View Presentation](https://1drv.ms/p/c/abf32209399c763f/EXDReULwoHxMo-9VMl4TWbgBhbOYu1VSHEXA30c_9n5N0g?e=FFV8ib)
