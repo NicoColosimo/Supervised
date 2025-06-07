@@ -1,0 +1,84 @@
+# Submarine Sounds Simulation and Feature Extraction
+
+This project simulates synthetic submarine acoustic signatures based on different submarine types and extracts audio features using Librosa. It includes characteristics such as harmonics, amplitude modulation, cavitation noise, hydrodynamic band-limited noise, and background noise.
+
+Simulating submarine sounds can help sonar system development, underwater acoustic research, and training machine learning models for underwater object classification.
+
+---
+
+## Features
+
+- **Submarine Profiles**: Each type (e.g., nuclear, stealth, fast-attack) has its own frequency and modulation characteristics.
+- **Signal Generation**: Combines harmonic tones, amplitude modulation, cavitation bursts, and hydrodynamic noise.
+- **Noise Layers**:
+  - Cavitation pops
+  - Band-limited hydrodynamic noise
+  - Broadband background noise
+- **Feature Extraction**: Computes audio features like:
+  - Zero Crossing Rate
+  - Spectral Centroid
+  - Spectral Bandwidth
+  - Spectral Rolloff
+  - RMS Energy
+  - MFCCs
+
+---
+
+## Dependencies
+
+- `numpy`
+- `pandas`
+- `librosa`
+
+Install with:
+
+```bash
+pip install numpy pandas librosa
+
+## Usage
+
+from submarine_sounds import generate_profile_signal_with_noise, extract_audio_features, submarine_profiles, sr
+
+# Choose a submarine profile
+profile = submarine_profiles["stealth"]
+
+# Generate sound signal
+signal = generate_profile_signal_with_noise(profile, sr=sr)
+
+# Extract audio features
+features = extract_audio_features(signal, sr)
+
+# View features as a Pandas Series
+import pandas as pd
+print(pd.Series(features))
+
+
+## Submarine Types
+
+diesel-electric – coastal transit
+nuclear – open-ocean cruising
+fast – high-speed operations
+ballistic – deterrent patrol
+stealth – silent mode
+experimental – testbed craft
+mini – shallow/coastal ops
+cargo – logistic support
+hunter-killer – ASW engagement
+deep-diver – extreme depth
+
+## Applications
+
+Sonar simulation
+
+Audio classification benchmarking
+
+Underwater acoustics research
+
+Machine learning training datasets
+
+## Presentation
+
+For a detailed walkthrough of the methodology, results, and insights, check out the presentation here:  
+[View Presentation](https://1drv.ms/p/c/abf32209399c763f/EZZ8t4Ux0OZMpAc4g3QrflwB6Ua50hVrmrnk6v59-AeJwQ?e=SvwPGR)
+
+
