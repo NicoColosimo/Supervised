@@ -1,0 +1,98 @@
+# Satellite Data Processing and Modeling
+
+This repository contains scripts for downloading, processing, and enriching satellite Two-Line Element (TLE) data, extracting orbital parameters, adding space weather indices (Kp index and solar flux), and training a Support Vector Regression (SVR) model to predict satellite altitude.
+
+---
+
+## Overview of Scripts
+
+### 1. `tle_orbital_dataset_generator.py`
+
+* **Purpose:** Downloads recent TLE data from Space-Track, parses TLEs, computes orbital parameters using the SGP4 propagator, fetches current solar flux and geomagnetic Kp index, and builds a comprehensive dataset.
+* **Process:**
+
+  * Logs into Space-Track using provided credentials to fetch TLE data from the last N days.
+  * Parses raw TLE text in 3-line element format (name + 2 TLE lines).
+  * Computes orbital parameters (altitude, inclination, eccentricity, semi-major axis, perigee, apogee) via SGP4.
+  * Fetches latest F10.7 solar flux and average Kp index values from NOAA SWPC.
+  * Combines all data into a DataFrame and exports to CSV (`satellite_orbit_decay_dataset.csv`).
+* **Usage:** Update the `username` and `password` variables in the `main()` function with your Space-Track credentials, then run the script.
+
+---
+
+### 2. `match_kp_to_satellite_epochs.py`
+
+* **Purpose:** Matches Kp index (geomagnetic activity) values to satellite epoch timestamps.
+* **Input:** Satellite data with epochs (`tle_with_parsed_features.xlsx`).
+* **Process:** Loads Kp index time series; assigns closest Kp index to each satellite epoch.
+* **Output:** Saves enriched satellite data with a new `kp_index` column (`satellite_data_with_kp_index.xlsx`).
+
+---
+
+### 3. `parsed_tle_features.py`
+
+* **Purpose:** Parses TLE line 1 and line 2 strings to extract orbital features and epoch datetime.
+* **Input:** CSV file containing TLE line 1 (`tle1`) and line 2 (`tle2`).
+* **Process:** Extracts epoch, inclination, RAAN, eccentricity, mean motion, etc.
+* **Output:** Saves enhanced dataset as `tle_with_parsed_features.csv`.
+
+---
+
+### 4. `solar_flux_mapper.py`
+
+* **Purpose:** Downloads NOAA daily F10.7 solar flux data and maps it to satellite observations by date.
+* **Input:** Satellite data with a `time` column (`standardized_satellite_data.xlsx`).
+* **Process:** Matches solar flux by date, standardizes values.
+* **Output:** Saves enriched data with solar flux to `satellite_data_with_flux.xlsx`.
+
+---
+
+### 5. `svr_altitude_model.py`
+
+* **Purpose:** Trains a Support Vector Regression model to predict satellite altitude based on processed features including orbital parameters and space weather indices.
+* **Input:** Dataset with features and target altitude (`updated_flux_data.xlsx`).
+* **Process:** Splits data, trains SVR, evaluates performance (MAE, MSE, RMSE, R²), and visualizes predictions.
+* **Output:** Prints evaluation metrics and saves plots (e.g., `histogram_transformed_altitude.png`).
+
+---
+
+## Usage Instructions
+
+1. **Download and Prepare TLE Dataset:**
+
+   * Run `tle_orbital_dataset_generator.py` with your Space-Track credentials to create the initial satellite dataset with orbital parameters and space weather indices.
+
+2. **Extract Detailed Orbital Features:**
+
+   * Use `parsed_tle_features.py` to parse and extract orbital parameters and epochs from raw TLE lines.
+
+3. **Match Geomagnetic Kp Index:**
+
+   * Run `match_kp_to_satellite_epochs.py` to append Kp index values aligned to satellite epochs.
+
+4. **Map Solar Flux:**
+
+   * Run `solar_flux_mapper.py` to map daily solar flux data from NOAA to satellite observations.
+
+5. **Train Altitude Prediction Model:**
+
+   * Use `svr_altitude_model.py` on the prepared dataset to train and evaluate the SVR model for altitude prediction.
+
+---
+
+## Requirements
+
+* Python 3.x
+* Packages: `pandas`, `numpy`, `requests`, `scikit-learn`, `matplotlib`, `scipy`, `openpyxl`, `sgp4`
+
+Install dependencies with:
+
+```bash
+pip install pandas numpy requests scikit-learn matplotlib scipy openpyxl sgp4
+
+---
+
+## Presentation
+
+You can view the Model Presentation Slideshow here: https://1drv.ms/p/c/abf32209399c763f/EdrSAJ_TYCpGlzCNl84D1-ABc8LJX-X8snK4Nmt9Na1vPQ?e=UUUbfF
+
